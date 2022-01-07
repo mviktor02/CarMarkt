@@ -1,0 +1,2 @@
+obj\Debug\netcoreapp3.1/Carmarkt.cs \
+obj\Debug\netcoreapp3.1/CarmarktGrpc.cs: Protos/carmarkt.proto

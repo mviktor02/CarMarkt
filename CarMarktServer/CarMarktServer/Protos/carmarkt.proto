@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+option csharp_namespace = "CarMarktServer";
+
+package CarMarkt;
+
+service CarMarkt {
+  rpc Register (User) returns (Session_Id);
+  rpc Login (User) returns (Session_Id);
+  rpc Logout (Session_Id) returns (Result);
+  rpc AddListing (FullCarData) returns (Result);
+  rpc RemoveListing (RemovalData) returns (Result);
+  rpc RefreshListings (Empty) returns (stream PartialCarData);
+  rpc Comment (CommentMessage) returns (Result);
+  rpc ViewComments (CarCode) returns (stream CommentMessage);
+  rpc ViewListing (CarCode) returns (FullCarData);
+}
+
+enum Body {
+  SEDAN = 0;
+  COUPE = 1;
+  SPORTS = 2;
+  WAGON = 3;
+  HATCHBACK = 4;
+  CONVERTIBLE = 5;
+  SUV = 6;
+  MINIVAN = 7;
+  PICKUP = 8;
+  OTHER = 9;
+}
+
+enum Fuel {
+  PETROL = 0;
+  DIESEL = 1;
+  ELECTRIC = 2;
+  HYBRID_PETROL = 3;
+  HYBRID_DIESEL = 4;
+  ETHANOL = 5;
+  BIODIESEL = 6;
+}
+
+message Empty {}
+
+message User {
+  string name = 1;
+  string password = 2;
+}
+
+message Session_Id {
+  string id = 1;
+}
+
+message Result {
+  string message = 1;
+}
+
+message RemovalData {
+  uint32 code = 1;
+  string ownerId = 2;
+  string ownerName = 3;
+}
+
+message CarCode {
+  uint32 code = 1;
+}
+
+message FullCarData {
+  Session_Id session = 1;
+  PartialCarData partialData = 2;
+  string description = 3;
+  string phoneNumber = 4;
+  string ownerName = 5;
+}
+
+message PartialCarData {
+  uint32 code = 1;
+  string make = 2;
+  string model = 3;
+  uint32 body = 4;
+  uint32 fuel = 5;
+  uint32 year = 6;
+  uint32 price = 7;
+}
+
+message CommentMessage {
+  uint32 code = 1;
+  string message = 2;
+  string owner = 3;
+  string time = 4;
+  string ownerId = 5;
+}
