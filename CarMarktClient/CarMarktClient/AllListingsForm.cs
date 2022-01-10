@@ -82,7 +82,7 @@ namespace CarMarktClient
           string car = Convert.ToString(data.Year) + " " + data.Make + " " + data.Model;
           ListingsDataGridView.Rows.Add(new object[] { Convert.ToString(data.Code), car, // Code column is hidden for data purposes
             Enum.GetName(typeof(Body), (Body)data.Body), Enum.GetName(typeof(Fuel), (Fuel)data.Fuel), Convert.ToString(data.Price),
-            Convert.ToString(data.Year), Convert.ToString(data.Make), Convert.ToString(data.Model) }); // These columns are hidden for ordering purposes
+            Convert.ToString(data.Year), Convert.ToString(data.Make), Convert.ToString(data.Model) }); // These columns are hidden
         }
       }
       OrderDataGridViewBy("Model");
@@ -96,23 +96,30 @@ namespace CarMarktClient
         while (await call.ResponseStream.MoveNext())
         {
           PartialCarData data = call.ResponseStream.Current;
-          string s = SearchByComboBox.SelectedItem.ToString();
           bool canAdd = false;
-          switch (s)
+          try
           {
-            case "Year": canAdd = !string.IsNullOrEmpty(query) && data.Year == Convert.ToUInt32(query); break;
-            case "Make": canAdd = data.Make.ToLower().Contains(query.ToLower()); break;
-            case "Model": canAdd = data.Model.ToLower().Contains(query.ToLower()); break;
-            case "Price": canAdd = !string.IsNullOrEmpty(query) && data.Price <= Convert.ToUInt32(query); break;
-            case "Body Type": canAdd = Enum.GetName(typeof(Body), (Body)data.Body).ToLower().Contains(query.ToLower()); break;
-            case "Fuel Type": canAdd = Enum.GetName(typeof(Fuel), (Fuel)data.Fuel).ToLower().Contains(query.ToLower()); break;
+            string s = SearchByComboBox.SelectedItem.ToString();
+            switch (s)
+            {
+              case "Year": try { canAdd = !string.IsNullOrEmpty(query) && data.Year == Convert.ToUInt32(query); } catch { canAdd = false; } break;
+              case "Make": canAdd = data.Make.ToLower().Contains(query.ToLower()); break;
+              case "Model": canAdd = data.Model.ToLower().Contains(query.ToLower()); break;
+              case "Price": try { canAdd = !string.IsNullOrEmpty(query) && data.Price <= Convert.ToUInt32(query); } catch { canAdd = false; } break;
+              case "Body Type": canAdd = Enum.GetName(typeof(Body), (Body)data.Body).ToLower().Contains(query.ToLower()); break;
+              case "Fuel Type": canAdd = Enum.GetName(typeof(Fuel), (Fuel)data.Fuel).ToLower().Contains(query.ToLower()); break;
+            }
+          }
+          catch
+          {
+            canAdd = false;
           }
           if (canAdd)
           {
             string car = Convert.ToString(data.Year) + " " + data.Make + " " + data.Model;
             ListingsDataGridView.Rows.Add(new object[] { Convert.ToString(data.Code), car, // Code column is hidden for data purposes
             Enum.GetName(typeof(Body), (Body)data.Body), Enum.GetName(typeof(Fuel), (Fuel)data.Fuel), Convert.ToString(data.Price),
-            Convert.ToString(data.Year), Convert.ToString(data.Make), Convert.ToString(data.Model) }); // These columns are hidden for ordering purposes
+            Convert.ToString(data.Year), Convert.ToString(data.Make), Convert.ToString(data.Model) }); // These columns are hidden
           }
         }
       }
@@ -133,15 +140,22 @@ namespace CarMarktClient
 
     private void OrderByComboBox_SelectedIndexChanged(object sender, EventArgs e)
     {
-      string s = SearchByComboBox.SelectedItem.ToString();
-      switch (s)
+      string s = "Make";
+      try
       {
-        case "Year": SearchTextBox.PlaceholderText = "Year..."; break;
-        case "Make": SearchTextBox.PlaceholderText = "Make..."; break;
-        case "Model": SearchTextBox.PlaceholderText = "Model..."; break;
-        case "Price": SearchTextBox.PlaceholderText = "Max Price..."; break;
-        case "Body Type": SearchTextBox.PlaceholderText = "Body Type..."; break;
-        case "Fuel Type": SearchTextBox.PlaceholderText = "Fuel Type..."; break;
+        s = SearchByComboBox.SelectedItem.ToString();
+        switch (s)
+        {
+          case "Year": SearchTextBox.PlaceholderText = "Year..."; break;
+          case "Make": SearchTextBox.PlaceholderText = "Make..."; break;
+          case "Model": SearchTextBox.PlaceholderText = "Model..."; break;
+          case "Price": SearchTextBox.PlaceholderText = "Max Price..."; break;
+          case "Body Type": SearchTextBox.PlaceholderText = "Body Type..."; break;
+          case "Fuel Type": SearchTextBox.PlaceholderText = "Fuel Type..."; break;
+        }
+      }
+      catch {
+        SearchTextBox.PlaceholderText = "Make...";
       }
       if (string.IsNullOrEmpty(SearchTextBox.Text))
       {

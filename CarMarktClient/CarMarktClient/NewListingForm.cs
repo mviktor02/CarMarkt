@@ -27,9 +27,18 @@ namespace CarMarktClient
 
     private void CreateListingButton_Click(object sender, EventArgs e)
     {
-      if (string.IsNullOrWhiteSpace(MakeTextBox.Text) || string.IsNullOrWhiteSpace(ModelTextBox.Text)
+      bool canCreate;
+      try
+      {
+        canCreate = !(string.IsNullOrWhiteSpace(MakeTextBox.Text) || string.IsNullOrWhiteSpace(ModelTextBox.Text)
         || string.IsNullOrWhiteSpace(BodyTypeComboBox.SelectedItem.ToString()) || string.IsNullOrWhiteSpace(FuelTypeComboBox.SelectedItem.ToString())
-        || string.IsNullOrEmpty(PhoneNumberTextBox.Text) || string.IsNullOrWhiteSpace(DescriptionTextBox.Text))
+        || string.IsNullOrEmpty(PhoneNumberTextBox.Text) || string.IsNullOrWhiteSpace(DescriptionTextBox.Text));
+      }
+      catch
+      {
+        canCreate = false;
+      }
+      if (!canCreate)
       {
         MessageBox.Show("Please fill in all fields");
       }

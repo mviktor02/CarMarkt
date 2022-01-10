@@ -91,7 +91,6 @@ namespace CarMarktClient
       this.Car.HeaderText = "Car";
       this.Car.Name = "Car";
       this.Car.ReadOnly = true;
-      this.Car.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
       // 
       // Body
       // 
@@ -177,6 +176,7 @@ namespace CarMarktClient
       // 
       // SearchByComboBox
       // 
+      this.SearchByComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
       this.SearchByComboBox.FormattingEnabled = true;
       this.SearchByComboBox.Location = new System.Drawing.Point(155, 416);
       this.SearchByComboBox.Name = "SearchByComboBox";
